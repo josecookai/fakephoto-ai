@@ -1,0 +1,71 @@
+# app.json for Heroku-style deployments
+# Can also be used for Railway, Render, and other platforms
+
+{
+  "name": "FakePhoto.ai",
+  "description": "Multi-Model AI Detection Engine for Images and Videos",
+  "repository": "https://github.com/josecookai/fakephoto-ai",
+  "logo": "https://fakephoto.ai/logo.png",
+  "keywords": ["python", "ai", "deepfake", "detection", "openai", "gemini", "claude"],
+  "website": "https://fakephoto.ai",
+  "success_url": "/",
+  "stack": "container",
+  "env": {
+    "ENVIRONMENT": {
+      "description": "Application environment",
+      "value": "production"
+    },
+    "LOG_LEVEL": {
+      "description": "Logging level",
+      "value": "info"
+    },
+    "OPENAI_API_KEY": {
+      "description": "OpenAI API key for GPT-4V analysis",
+      "required": true
+    },
+    "GOOGLE_API_KEY": {
+      "description": "Google API key for Gemini analysis",
+      "required": false
+    },
+    "ANTHROPIC_API_KEY": {
+      "description": "Anthropic API key for Claude analysis",
+      "required": false
+    },
+    "MAX_FILE_SIZE": {
+      "description": "Maximum file upload size in MB",
+      "value": "50"
+    },
+    "WORKERS": {
+      "description": "Number of Gunicorn workers",
+      "value": "4"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-2x"
+    }
+  },
+  "healthchecks": {
+    "web": {
+      "path": "/health",
+      "port": 8000,
+      "initialDelay": 10,
+      "checkInterval": 30,
+      "timeout": 5,
+      "httpTimeout": 5,
+      "path": "/health",
+      "successThreshold": 1
+    }
+  },
+  "addons": [
+    {
+      "plan": "rediscloud:30"
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

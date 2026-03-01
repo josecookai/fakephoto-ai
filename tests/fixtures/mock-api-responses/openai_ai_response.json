@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-8XyZ123456789",
+  "object": "chat.completion",
+  "created": 1704067200,
+  "model": "gpt-4-vision-preview",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "This image exhibits several characteristics typical of AI-generated content:\n\n**AI Probability: 0.85**\n\n**Key Indicators:**\n1. Unnatural lighting patterns - shadows don't align with light source\n2. Texture inconsistencies in hair and skin\n3. Asymmetric facial features (ears slightly mismatched)\n4. Background blur artifacts typical of diffusion models\n\n**Confidence: 0.90**\n\nThe image was likely generated using a Stable Diffusion or Midjourney model based on the specific artifact patterns observed."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 245,
+    "completion_tokens": 128,
+    "total_tokens": 373
+  }
+}

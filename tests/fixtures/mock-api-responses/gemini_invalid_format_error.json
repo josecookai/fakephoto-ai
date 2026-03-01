@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": 400,
+    "message": "Invalid image format. Supported formats: JPEG, PNG, GIF, WebP.",
+    "status": "INVALID_ARGUMENT"
+  }
+}

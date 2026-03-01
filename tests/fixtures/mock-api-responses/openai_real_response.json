@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-8XyZ987654321",
+  "object": "chat.completion",
+  "created": 1704067300,
+  "model": "gpt-4-vision-preview",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Based on my analysis, this image appears to be authentic:\n\n**AI Probability: 0.15**\n\n**Assessment:**\n- Natural lighting and shadow consistency throughout\n- Realistic skin texture with natural imperfections\n- Consistent noise pattern (ISO grain)\n- Natural depth of field\n- Authentic EXIF metadata present\n\n**Confidence: 0.88**\n\nThe image shows characteristics of a genuine photograph taken with a professional camera. No AI generation artifacts detected."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 245,
+    "completion_tokens": 115,
+    "total_tokens": 360
+  }
+}

@@ -1,0 +1,40 @@
+[run]
+source = src/fakephoto
+branch = True
+omit = 
+    */tests/*
+    */test_*
+    */venv/*
+    */.venv/*
+    */__pycache__/*
+    */.tox/*
+    */.pytest_cache/*
+    */.git/*
+    setup.py
+    conftest.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod
+    pass
+    except ImportError:
+    def test_
+
+show_missing = True
+skip_covered = False
+precision = 2
+
+[html]
+directory = htmlcov
+
+[xml]
+output = coverage.xml

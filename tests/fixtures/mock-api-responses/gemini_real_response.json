@@ -1,0 +1,27 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Image Authenticity Analysis:\n\nProbability: 0.12 (Authentic)\nConfidence: 0.91\n\nAssessment:\n- Natural chromatic aberration consistent with lens optics\n- Authentic motion blur in background\n- Realistic skin pores and texture\n- Proper lens distortion at edges\n- Natural bokeh effect in background\n\nThis appears to be a genuine photograph."
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "safetyRatings": [
+        {
+          "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          "probability": "NEGLIGIBLE"
+        }
+      ]
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 48,
+    "candidatesTokenCount": 76,
+    "totalTokenCount": 124
+  }
+}

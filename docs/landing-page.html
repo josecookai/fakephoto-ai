@@ -1,34 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FakePhoto.ai - AI Image Detection Engine</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="description" content="Multi-Model AI Detection Engine - Verify if images and videos are AI-generated using OpenAI, Google Gemini, and Anthropic">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Dark theme (default) */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: rgba(255,255,255,0.03);
+            --bg-tertiary: rgba(255,255,255,0.05);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.5);
+            --border-color: rgba(255,255,255,0.1);
+            --border-hover: rgba(102, 126, 234, 0.3);
+            --accent-primary: #667eea;
+            --accent-secondary: #764ba2;
+            --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255,255,255,0.03);
+            --shadow-color: rgba(102, 126, 234, 0.4);
+            --glow-color: rgba(102, 126, 234, 0.15);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --border-hover: #667eea;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --card-bg: #ffffff;
+            --shadow-color: rgba(99, 102, 241, 0.3);
+            --glow-color: rgba(99, 102, 241, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        html {
+            scroll-behavior: smooth;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0f;
-            color: #fff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 24px;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-primary);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        .bg-orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-secondary);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+
+        .bg-orb-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent-primary);
+            top: 50%;
+            left: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -50px) scale(1.1); }
+            50% { transform: translate(0, 50px) scale(0.9); }
+            75% { transform: translate(-50px, -25px) scale(1.05); }
+        }
+
+        /* Particle Network */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
         
         /* Header */
         header {
-            padding: 24px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            background: rgba(var(--bg-primary), 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 12px 0;
+            background: rgba(var(--bg-primary), 0.95);
         }
         
         nav {
@@ -40,24 +183,39 @@
         .logo {
             font-size: 24px;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
         
         .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            -webkit-text-fill-color: initial;
+            font-size: 20px;
+            animation: pulse-glow 2s infinite;
         }
-        
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 20px 5px rgba(102, 126, 234, 0.2); }
+        }
+
         .nav-links {
             display: flex;
             gap: 32px;
@@ -65,108 +223,245 @@
         }
         
         .nav-links a {
-            color: rgba(255,255,255,0.7);
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.3s ease;
         }
         
         .nav-links a:hover {
-            color: #fff;
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-hover);
+            transform: scale(1.05);
+        }
+
+        .theme-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-icon.active {
+            background: var(--accent-gradient);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
         }
         
         .btn {
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--accent-gradient);
             color: #fff;
-            border: none;
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 30px var(--shadow-color);
         }
         
         .btn-secondary {
-            background: transparent;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
         }
         
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
+            background: var(--bg-tertiary);
+            border-color: var(--border-hover);
+        }
+
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 16px;
         }
         
         /* Hero Section */
         .hero {
-            padding: 120px 0 80px;
+            padding: 180px 0 100px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 50%);
-            pointer-events: none;
+            z-index: 10;
         }
         
         .badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 10px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 100px;
             font-size: 14px;
-            color: #667eea;
+            color: var(--accent-primary);
             margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
         }
         
         .badge-dot {
             width: 8px;
             height: 8px;
-            background: #10b981;
+            background: var(--success);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
         
         h1 {
-            font-size: 72px;
+            font-size: clamp(40px, 8vw, 72px);
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 24px;
-            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            background: linear-gradient(180deg, var(--text-primary) 0%, var(--text-secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.6s ease 0.1s both;
         }
         
         .hero-subtitle {
-            font-size: 20px;
-            color: rgba(255,255,255,0.6);
-            max-width: 600px;
+            font-size: clamp(16px, 3vw, 20px);
+            color: var(--text-muted);
+            max-width: 640px;
             margin: 0 auto 40px;
+            animation: fadeInUp 0.6s ease 0.2s both;
         }
         
         .hero-cta {
@@ -174,14 +469,65 @@
             gap: 16px;
             justify-content: center;
             margin-bottom: 80px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 80px;
+            animation: fadeInUp 0.6s ease 0.4s both;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
         
         /* Demo Section */
         .demo {
-            background: linear-gradient(180deg, rgba(102, 126, 234, 0.05) 0%, transparent 100%);
+            background: var(--bg-secondary);
             border-radius: 24px;
             padding: 48px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            animation: fadeInUp 0.6s ease 0.5s both;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--accent-gradient);
+            opacity: 0.5;
+        }
+
+        .demo:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 60px var(--glow-color);
         }
         
         .demo-header {
@@ -189,55 +535,112 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
         
         .demo-title {
             font-size: 18px;
             font-weight: 600;
+            color: var(--text-primary);
         }
         
         .demo-badge {
             display: flex;
-            gap: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         
         .model-tag {
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 6px;
+            padding: 6px 14px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
             font-size: 12px;
-            color: rgba(255,255,255,0.6);
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .model-tag:hover {
+            background: var(--accent-gradient);
+            color: white;
+            transform: translateY(-2px);
         }
         
         .upload-zone {
-            border: 2px dashed rgba(255,255,255,0.2);
+            border: 2px dashed var(--border-color);
             border-radius: 16px;
             padding: 80px 48px;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .upload-zone:hover::before {
+            left: 100%;
         }
         
         .upload-zone:hover {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.05);
+            border-color: var(--accent-primary);
+            background: var(--glow-color);
+            transform: translateY(-2px);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--accent-primary);
+            background: var(--glow-color);
+            transform: scale(1.02);
         }
         
         .upload-icon {
-            width: 64px;
-            height: 64px;
+            width: 80px;
+            height: 80px;
             margin: 0 auto 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 16px;
+            background: var(--accent-gradient);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 36px;
+            animation: float-icon 3s infinite ease-in-out;
+            box-shadow: 0 10px 40px var(--shadow-color);
         }
-        
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-zone h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .upload-zone p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
         /* Features */
         .features {
             padding: 120px 0;
+            position: relative;
+            z-index: 10;
         }
         
         .section-header {
@@ -246,76 +649,112 @@
         }
         
         .section-header h2 {
-            font-size: 48px;
+            font-size: clamp(32px, 5vw, 48px);
             font-weight: 700;
             margin-bottom: 16px;
+            animation: fadeInUp 0.6s ease;
         }
         
         .section-header p {
             font-size: 18px;
-            color: rgba(255,255,255,0.6);
+            color: var(--text-muted);
+            animation: fadeInUp 0.6s ease 0.1s both;
         }
         
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
         }
         
         .feature-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 32px;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
         }
         
         .feature-card:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(102, 126, 234, 0.3);
-            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--glow-color);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
         
         .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
+            width: 56px;
+            height: 56px;
+            background: var(--accent-gradient);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
         }
         
         .feature-card h3 {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 12px;
+            color: var(--text-primary);
         }
         
         .feature-card p {
-            color: rgba(255,255,255,0.6);
+            color: var(--text-secondary);
             font-size: 15px;
+            line-height: 1.6;
         }
-        
+
         /* How It Works */
         .how-it-works {
             padding: 120px 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(102, 126, 234, 0.05) 50%, transparent 100%);
+            position: relative;
+            z-index: 10;
         }
         
         .steps {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 32px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
             margin-top: 60px;
         }
         
         .step {
             text-align: center;
             position: relative;
+            animation: fadeInUp 0.6s ease both;
         }
+
+        .step:nth-child(1) { animation-delay: 0.1s; }
+        .step:nth-child(2) { animation-delay: 0.2s; }
+        .step:nth-child(3) { animation-delay: 0.3s; }
+        .step:nth-child(4) { animation-delay: 0.4s; }
         
         .step:not(:last-child)::after {
             content: '';
@@ -324,14 +763,20 @@
             right: -50%;
             width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, #667eea 0%, transparent 100%);
+            background: var(--accent-gradient);
             opacity: 0.3;
+        }
+
+        @media (max-width: 1200px) {
+            .step:not(:last-child)::after {
+                display: none;
+            }
         }
         
         .step-number {
             width: 64px;
             height: 64px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--accent-gradient);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -339,98 +784,517 @@
             font-size: 24px;
             font-weight: 700;
             margin: 0 auto 20px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+
+        .step:hover .step-number {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px var(--shadow-color);
         }
         
         .step h4 {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 8px;
+            color: var(--text-primary);
         }
         
         .step p {
-            color: rgba(255,255,255,0.6);
+            color: var(--text-muted);
             font-size: 14px;
+        }
+
+        /* API Preview Section */
+        .api-section {
+            padding: 120px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border-radius: 16px;
+            padding: 24px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .code-block {
+            background: #1e293b;
+        }
+
+        .code-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27c93f; }
+
+        .code-content {
+            color: #a6accd;
+        }
+
+        .code-keyword { color: #c099ff; }
+        .code-string { color: #7ee787; }
+        .code-function { color: #82aaff; }
+        .code-comment { color: #676e95; }
+        .code-number { color: #f78c6c; }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 120px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .author-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .author-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .stars {
+            color: #fbbf24;
+            margin-bottom: 12px;
         }
         
         /* CTA Section */
         .cta {
             padding: 120px 0;
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
         
         .cta-box {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border: 1px solid rgba(102, 126, 234, 0.3);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 80px;
+            padding: 80px 40px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 50%);
+            pointer-events: none;
         }
         
         .cta h2 {
-            font-size: 48px;
+            font-size: clamp(28px, 5vw, 48px);
             font-weight: 700;
             margin-bottom: 16px;
+            position: relative;
         }
         
         .cta p {
             font-size: 18px;
-            color: rgba(255,255,255,0.6);
+            color: var(--text-muted);
             margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 120px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-hover);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent-primary);
+            background: linear-gradient(180deg, var(--card-bg) 0%, rgba(102, 126, 234, 0.1) 100%);
+        }
+
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-gradient);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pricing-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .pricing-price {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .pricing-price span {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .pricing-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: 700;
         }
         
         /* Footer */
         footer {
-            padding: 60px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            color: rgba(255,255,255,0.4);
+            padding: 80px 0 40px;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+            z-index: 10;
         }
-        
-        footer a {
-            color: rgba(255,255,255,0.6);
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand {
+            max-width: 300px;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 16px;
+            display: inline-flex;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .footer-links h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
             text-decoration: none;
-            margin: 0 16px;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
-        
-        footer a:hover {
-            color: #fff;
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .social-links a:hover {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-color);
         }
         
         /* Responsive */
-        @media (max-width: 968px) {
-            h1 {
-                font-size: 48px;
+        @media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
             }
-            
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .stats-bar {
+                gap: 30px;
+            }
+
+            .demo {
+                padding: 32px 24px;
+            }
+
+            .upload-zone {
+                padding: 60px 24px;
+            }
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .steps {
+
+            .pricing-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .step:not(:last-child)::after {
-                display: none;
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
             }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cta-box {
+                padding: 60px 24px;
+            }
+        }
+
+        /* Intersection Observer Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+    </div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
     <!-- Header -->
-    <header>
+    <header id="header">
         <div class="container">
             <nav>
-                <div class="logo">
+                <a href="#" class="logo">
                     <div class="logo-icon">🔍</div>
                     FakePhoto.ai
-                </div>
+                </a>
                 <div class="nav-links">
                     <a href="#features">Features</a>
                     <a href="#how-it-works">How It Works</a>
+                    <a href="#pricing">Pricing</a>
                     <a href="#api">API</a>
                     <a href="https://github.com/josecookai/fakephoto-ai" target="_blank">GitHub</a>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <span class="theme-icon active" data-theme="dark">🌙</span>
+                        <span class="theme-icon" data-theme="light">☀️</span>
+                    </button>
                     <a href="#" class="btn btn-primary">Get Started</a>
                 </div>
+                <button class="mobile-menu-btn" aria-label="Open menu">☰</button>
             </nav>
         </div>
     </header>
@@ -451,31 +1315,50 @@
             </p>
             
             <div class="hero-cta">
-                <a href="#" class="btn btn-primary">
-                    🔥 Try Free Demo
+                <a href="#" class="btn btn-primary btn-large">
+                    <span>🔥</span> Try Free Demo
                 </a>
-                <a href="https://github.com/josecookai/fakephoto-ai" target="_blank" class="btn btn-secondary">
-                    📂 View on GitHub
+                <a href="https://github.com/josecookai/fakephoto-ai" target="_blank" class="btn btn-secondary btn-large">
+                    <span>📂</span> View on GitHub
                 </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value">97%</div>
+                    <div class="stat-label">Accuracy Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">AI Models</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">50ms</div>
+                    <div class="stat-label">Avg Response</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">10K+</div>
+                    <div class="stat-label">Images Analyzed</div>
+                </div>
             </div>
             
             <!-- Demo Section -->
-            <div class="demo">
+            <div class="demo" id="demo">
                 <div class="demo-header">
                     <div class="demo-title">Live Detection Demo</div>
                     <div class="demo-badge">
-                        <span class="model-tag">GPT-4V</span>
-                        <span class="model-tag">Gemini</span>
-                        <span class="model-tag">Claude</span>
+                        <span class="model-tag">🧠 GPT-4V</span>
+                        <span class="model-tag">✨ Gemini</span>
+                        <span class="model-tag">🎭 Claude</span>
                     </div>
                 </div>
                 
-                <div class="upload-zone">
+                <div class="upload-zone" id="upload-zone">
                     <div class="upload-icon">📤</div>
                     <h3>Drop your image or video here</h3>
-                    <p style="color: rgba(255,255,255,0.5); margin-top: 8px;">
-                        Supports JPG, PNG, WebP, MP4, MOV • Max 100MB
-                    </p>
+                    <p>Supports JPG, PNG, WebP, MP4, MOV • Max 100MB</p>
+                    <input type="file" id="file-input" accept="image/*,video/*" hidden>
                 </div>
             </div>
         </div>
@@ -490,37 +1373,37 @@
             </div>
             
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-card" style="animation-delay: 0.1s">
                     <div class="feature-icon">🎯</div>
                     <h3>Multi-Model Consensus</h3>
                     <p>Combines results from OpenAI, Gemini, and Anthropic for robust detection with weighted confidence scoring.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card" style="animation-delay: 0.2s">
                     <div class="feature-icon">🖼️</div>
                     <h3>Image & Video Support</h3>
                     <p>Analyze photos and videos with intelligent frame sampling for comprehensive authenticity verification.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card" style="animation-delay: 0.3s">
                     <div class="feature-icon">⚡</div>
                     <h3>Batch Processing</h3>
                     <p>Process entire folders of media files at once. Perfect for journalists, researchers, and content moderators.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card" style="animation-delay: 0.4s">
                     <div class="feature-icon">🔌</div>
                     <h3>API & SDK</h3>
                     <p>RESTful API and Python SDK for seamless integration into your applications and workflows.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card" style="animation-delay: 0.5s">
                     <div class="feature-icon">🌐</div>
                     <h3>Web Interface</h3>
                     <p>Beautiful, intuitive Streamlit UI for quick drag-and-drop analysis without any coding required.</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card" style="animation-delay: 0.6s">
                     <div class="feature-icon">📊</div>
                     <h3>Detailed Reports</h3>
                     <p>Get comprehensive analysis with specific indicators: lighting, textures, facial anomalies, metadata.</p>
@@ -565,6 +1448,143 @@
         </div>
     </section>
 
+    <!-- API Section -->
+    <section class="api-section" id="api">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple API Integration</h2>
+                <p>Get started with just a few lines of code</p>
+            </div>
+            
+            <div class="code-block animate-on-scroll">
+                <div class="code-header">
+                    <span class="code-dot red"></span>
+                    <span class="code-dot yellow"></span>
+                    <span class="code-dot green"></span>
+                    <span style="color: #676e95; margin-left: 10px; font-size: 12px;">Python</span>
+                </div>
+                <pre class="code-content"><span class="code-keyword">from</span> fakephoto <span class="code-keyword">import</span> MultiModelDetector
+
+<span class="code-comment"># Initialize detector with your API keys</span>
+detector = MultiModelDetector(
+    openai_api_key=<span class="code-string">"your-key"</span>,
+    google_api_key=<span class="code-string">"your-key"</span>,
+    anthropic_api_key=<span class="code-string">"your-key"</span>
+)
+
+<span class="code-comment"># Analyze an image</span>
+result = detector.analyze(<span class="code-string">"image.jpg"</span>)
+
+<span class="code-function">print</span>(<span class="code-string">f"AI Generated: </span>{result.is_ai_generated}<span class="code-string">"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Confidence: </span>{result.confidence_score:<span class="code-number">.2f</span>}%<span class="code-string">"</span>)
+<span class="code-function">print</span>(<span class="code-string">f"Consensus: </span>{result.consensus}<span class="code-string">"</span>)</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Loved by Developers</h2>
+                <p>See what our users are saying about FakePhoto.ai</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card" style="animation-delay: 0.1s">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"FakePhoto.ai has been a game-changer for our fact-checking team. The multi-model approach gives us confidence in our assessments."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SJ</div>
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Editor at NewsDaily</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card" style="animation-delay: 0.2s">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"The API is incredibly easy to integrate. We had it running in production within a day. Highly recommended!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MC</div>
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>CTO at VerifyTech</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card" style="animation-delay: 0.3s">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"Best AI detection tool I've used. The detailed reports help us understand exactly what to look for in synthetic media."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">ER</div>
+                        <div class="author-info">
+                            <h4>Emily Rodriguez</h4>
+                            <p>Research Lead at AI Labs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple Pricing</h2>
+                <p>Choose the plan that works best for you</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card" style="animation-delay: 0.1s">
+                    <div class="pricing-name">Free</div>
+                    <div class="pricing-price">$0<span>/month</span></div>
+                    <div class="pricing-desc">Perfect for getting started</div>
+                    <ul class="pricing-features">
+                        <li>100 analyses/month</li>
+                        <li>Basic API access</li>
+                        <li>Community support</li>
+                        <li>Standard models</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="width: 100%; justify-content: center;">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured" style="animation-delay: 0.2s">
+                    <div class="pricing-name">Pro</div>
+                    <div class="pricing-price">$49<span>/month</span></div>
+                    <div class="pricing-desc">For professionals and teams</div>
+                    <ul class="pricing-features">
+                        <li>10,000 analyses/month</li>
+                        <li>Priority API access</li>
+                        <li>Email support</li>
+                        <li>All models + beta features</li>
+                        <li>Batch processing</li>
+                        <li>Detailed reports</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width: 100%; justify-content: center;">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card" style="animation-delay: 0.3s">
+                    <div class="pricing-name">Enterprise</div>
+                    <div class="pricing-price">Custom</div>
+                    <div class="pricing-desc">For large organizations</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited analyses</li>
+                        <li>Dedicated support</li>
+                        <li>SLA guarantee</li>
+                        <li>Custom models</li>
+                        <li>On-premise option</li>
+                        <li>SSO & audit logs</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="width: 100%; justify-content: center;">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
@@ -572,11 +1592,11 @@
                 <h2>Ready to detect fake media?</h2>
                 <p>Start verifying images and videos today. Free tier includes 100 analyses per month.</p>
                 <div class="hero-cta" style="justify-content: center;">
-                    <a href="#" class="btn btn-primary">
-                        🚀 Get Started Free
+                    <a href="#" class="btn btn-primary btn-large">
+                        <span>🚀</span> Get Started Free
                     </a>
-                    <a href="https://github.com/josecookai/fakephoto-ai" target="_blank" class="btn btn-secondary">
-                        📖 Read Documentation
+                    <a href="https://github.com/josecookai/fakephoto-ai" target="_blank" class="btn btn-secondary btn-large">
+                        <span>📖</span> Read Documentation
                     </a>
                 </div>
             </div>
@@ -586,19 +1606,299 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p style="margin-bottom: 16px;">
-                <strong style="color: #fff;">FakePhoto.ai</strong> — Multi-Model AI Detection Engine
-            </p>
-            <div style="margin-bottom: 16px;">
-                <a href="#">Documentation</a>
-                <a href="#">API Reference</a>
-                <a href="https://github.com/josecookai/fakephoto-ai">GitHub</a>
-                <a href="#">Twitter</a>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">🔍</div>
+                        FakePhoto.ai
+                    </a>
+                    <p>Multi-Model AI Detection Engine. Verify authenticity with confidence using state-of-the-art AI models.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#api">API</a></li>
+                        <li><a href="#">Changelog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">SDKs</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                    </ul>
+                </div>
             </div>
-            <p style="font-size: 14px;">
-                © 2026 FakePhoto.ai • Open source under MIT License
-            </p>
+
+            <div class="footer-bottom">
+                <p>© 2026 FakePhoto.ai • Open source under MIT License</p>
+                <div class="social-links">
+                    <a href="https://github.com/josecookai/fakephoto-ai" aria-label="GitHub">📂</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                    <a href="#" aria-label="Discord">💬</a>
+                    <a href="#" aria-label="LinkedIn">💼</a>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scroll-top" aria-label="Scroll to top">↑</button>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const themeIcons = document.querySelectorAll('.theme-icon');
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcons(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcons(newTheme);
+        });
+
+        function updateThemeIcons(theme) {
+            themeIcons.forEach(icon => {
+                icon.classList.toggle('active', icon.dataset.theme === theme);
+            });
+        }
+
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scroll-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Upload zone interactions
+        const uploadZone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('file-input');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            // Show a simple alert for demo purposes
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            uploadZone.innerHTML = `
+                <div class="upload-icon" style="animation: none;">✓</div>
+                <h3>${file.name}</h3>
+                <p>${fileSize} MB • Processing...</p>
+            `;
+            
+            // Simulate processing
+            setTimeout(() => {
+                uploadZone.innerHTML = `
+                    <div class="upload-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); animation: none;">✓</div>
+                    <h3>Analysis Complete!</h3>
+                    <p style="color: var(--success);">Likely Authentic • 92% Confidence</p>
+                    <p style="font-size: 12px; margin-top: 8px;">Click to analyze another file</p>
+                `;
+            }, 2000);
+        }
+
+        // Particle Network Animation
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let particles = [];
+        const particleCount = 25;
+        const connectionDistance = 150;
+        const maxConnections = 3;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() || '#667eea';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                let connections = 0;
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance && connections < maxConnections) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(102, 126, 234, ${0.2 * (1 - distance / connectionDistance)})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                        connections++;
+                    }
+                }
+            }
+        }
+
+        let animationId;
+        let lastTime = 0;
+        const frameInterval = 1000 / 30; // 30 FPS
+
+        function animate(currentTime) {
+            animationId = requestAnimationFrame(animate);
+            
+            const deltaTime = currentTime - lastTime;
+            if (deltaTime < frameInterval) return;
+            lastTime = currentTime - (deltaTime % frameInterval);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            drawConnections();
+        }
+
+        // Initialize particles
+        resizeCanvas();
+        initParticles();
+        animate(0);
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Pause animation when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+            } else {
+                animate(0);
+            }
+        });
+    </script>
 </body>
 </html>

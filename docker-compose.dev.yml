@@ -1,0 +1,56 @@
+version: '3.8'
+
+# Development docker-compose configuration
+# Optimized for local development with hot reload
+
+services:
+  # Python Backend API (dev mode)
+  api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fakephoto-api-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ENVIRONMENT=development
+      - LOG_LEVEL=debug
+      - PYTHONPATH=/app/src
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./uploads:/app/uploads
+    command: >
+      sh -c "pip install -e . &&
+             uvicorn fakephoto.api:app --host 0.0.0.0 --port 8000 --reload"
+    networks:
+      - fakephoto-dev-network
+
+  # Streamlit Web Interface (dev mode)
+  web-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fakephoto-web-dev
+    ports:
+      - "8501:8501"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - STREAMLIT_SERVER_RUN_ON_SAVE=true
+    volumes:
+      - ./src:/app/src
+      - ./uploads:/app/uploads
+    command: >
+      sh -c "pip install -e . &&
+             streamlit run src/app.py --server.runOnSave=true"
+    networks:
+      - fakephoto-dev-network
+
+networks:
+  fakephoto-dev-network:
+    driver: bridge

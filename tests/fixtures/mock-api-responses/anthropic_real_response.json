@@ -1,0 +1,17 @@
+{
+  "id": "msg_01XYZ789ABCDEF123",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-3-opus-20240229",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image Analysis Results:\n\n**AI-Generated Probability: 0.18**\n**Confidence: 0.89**\n\nAuthenticity Indicators:\n- Natural lighting with consistent shadow behavior\n- Imperfect details typical of real-world photography\n- Authentic noise/grain pattern across image\n- Realistic depth of field falloff\n- Natural color variations in skin tones\n\nVerdict: Authentic photograph with high confidence."
+    }
+  ],
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 156,
+    "output_tokens": 87
+  }
+}

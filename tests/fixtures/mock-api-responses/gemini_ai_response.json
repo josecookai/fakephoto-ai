@@ -1,0 +1,31 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "AI Detection Analysis:\n\nProbability: 0.82 (AI-generated)\nConfidence: 0.87\n\nKey Findings:\n- Unusual pattern in background elements\n- Overly perfect symmetry in facial features\n- Synthetic-looking texture on clothing\n- Missing fine details typical of real photos\n\nModel appears to be DALL-E 3 or similar diffusion model."
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0,
+      "safetyRatings": [
+        {
+          "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          "probability": "NEGLIGIBLE"
+        },
+        {
+          "category": "HARM_CATEGORY_HATE_SPEECH",
+          "probability": "NEGLIGIBLE"
+        }
+      ]
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 52,
+    "candidatesTokenCount": 89,
+    "totalTokenCount": 141
+  }
+}

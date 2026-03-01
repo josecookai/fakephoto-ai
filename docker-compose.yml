@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # Python Backend API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: fakephoto-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ENVIRONMENT=production
+      - LOG_LEVEL=info
+    volumes:
+      - ./uploads:/app/uploads:rw
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - fakephoto-network
+
+  # Streamlit Web Interface
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fakephoto-web
+    ports:
+      - "8501:8501"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - API_URL=http://api:8000
+    volumes:
+      - ./src:/app/src:ro
+      - ./uploads:/app/uploads:rw
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - fakephoto-network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: fakephoto-redis
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - fakephoto-network
+
+  # Nginx reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: fakephoto-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+      - web
+    restart: unless-stopped
+    networks:
+      - fakephoto-network
+
+volumes:
+  redis-data:
+
+networks:
+  fakephoto-network:
+    driver: bridge

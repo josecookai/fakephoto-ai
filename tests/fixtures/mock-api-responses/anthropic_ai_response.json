@@ -1,0 +1,17 @@
+{
+  "id": "msg_01ABCDEF123456789",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-3-opus-20240229",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image Analysis Results:\n\n**AI-Generated Probability: 0.78**\n**Confidence: 0.85**\n\nIndicators Detected:\n1. Inconsistent shadow direction across objects\n2. Texture repetition patterns in background\n3. Slightly unnatural hand proportions\n4. Hyper-realistic details inconsistent with typical photography\n5. Color grading typical of AI models\n\nVerdict: Likely AI-generated using modern diffusion model."
+    }
+  ],
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 156,
+    "output_tokens": 98
+  }
+}
